@@ -113,211 +113,252 @@
     },
     "type" : "org.graylog2.inputs.syslog.udp.SyslogUDPInput",
     "global" : false,
-    "extractors" : [ {
-      "title" : "Remote Address",
-      "type" : "REGEX",
-      "configuration" : {
-        "regex_value" : "nginx:\\s+(\\S+)"
+    "extractors": [ {
+      "title": "Remote Address",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "remote_addr",
+      "extractor_config": {
+        "regex_value": "nginx:\\s+(\\S+)"
       },
-      "converters" : [ ],
-      "order" : 0,
-      "cursor_strategy" : "COPY",
-      "target_field" : "remote_addr",
-      "source_field" : "message",
-      "condition_type" : "REGEX",
-      "condition_value" : "^\\S+\\s+nginx:"
-    }, {
-      "title" : "Remote User",
-      "type" : "REGEX",
-      "configuration" : {
-        "regex_value" : "nginx: \\S+ - (\\S+)"
+      "condition_type": "regex",
+      "condition_value": "^\\S+\\s+nginx:"
+    },
+    {
+      "title": "Remote User",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 1,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "remote_user",
+      "extractor_config": {
+        "regex_value": "nginx: \\S+ - (\\S+)"
       },
-      "converters" : [ ],
-      "order" : 1,
-      "cursor_strategy" : "COPY",
-      "target_field" : "remote_user",
-      "source_field" : "message",
-      "condition_type" : "REGEX",
-      "condition_value" : "^\\S+\\s+nginx:"
-    }, {
-      "title" : "Request Timestamp",
-      "type" : "REGEX",
-      "configuration" : {
-        "regex_value" : "nginx:.+?\\[(.+?)\\]"
-      },
-      "converters" : [ {
-        "type" : "DATE",
-        "configuration" : {
-          "date_format" : "dd/MMM/YYYY:HH:mm:ss Z"
+      "condition_type": "regex",
+      "condition_value": "^\\S+\\s+nginx:"
+    },
+    {
+      "title": "Request Timestamp",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "date",
+          "config": {
+            "date_format": "dd/MMM/YYYY:HH:mm:ss Z"
+          }
         }
-      } ],
-      "order" : 2,
-      "cursor_strategy" : "COPY",
-      "target_field" : "timestamp",
-      "source_field" : "message",
-      "condition_type" : "REGEX",
-      "condition_value" : "^\\S+\\s+nginx:"
-    }, {
-      "title" : "Request Verb",
-      "type" : "REGEX",
-      "configuration" : {
-        "regex_value" : "nginx:.+\\[.+\\] \"(\\S+)"
+      ],
+      "order": 2,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "timestamp",
+      "extractor_config": {
+        "regex_value": "nginx:.+?\\[(.+?)\\]"
       },
-      "converters" : [ ],
-      "order" : 3,
-      "cursor_strategy" : "COPY",
-      "target_field" : "request_verb",
-      "source_field" : "message",
-      "condition_type" : "REGEX",
-      "condition_value" : "^\\S+\\s+nginx:"
-    }, {
-      "title" : "Request Path",
-      "type" : "REGEX",
-      "configuration" : {
-        "regex_value" : "nginx:.+?\"\\S+ (\\S+).+\""
+      "condition_type": "regex",
+      "condition_value": "^\\S+\\s+nginx:"
+    },
+    {
+      "title": "HTTP Version",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 6,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "http_version",
+      "extractor_config": {
+        "regex_value": "nginx:.+HTTP/(\\S+)\""
       },
-      "converters" : [ {
-        "type" : "NUMERIC",
-        "configuration" : { }
-      } ],
-      "order" : 4,
-      "cursor_strategy" : "COPY",
-      "target_field" : "request_path",
-      "source_field" : "message",
-      "condition_type" : "REGEX",
-      "condition_value" : "^\\S+\\s+nginx:"
-    }, {
-      "title" : "HTTP Version",
-      "type" : "REGEX",
-      "configuration" : {
-        "regex_value" : "nginx:.+HTTP/(\\S+)\""
+      "condition_type": "regex",
+      "condition_value": "^\\S+\\s+nginx:"
+    },
+    {
+      "title": "Response Status",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 7,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "response_status",
+      "extractor_config": {
+        "regex_value": "nginx:.+?HTTP/\\S+\" (\\d+)"
       },
-      "converters" : [ ],
-      "order" : 5,
-      "cursor_strategy" : "COPY",
-      "target_field" : "http_version",
-      "source_field" : "message",
-      "condition_type" : "REGEX",
-      "condition_value" : "^\\S+\\s+nginx:"
-    }, {
-      "title" : "Response Status",
-      "type" : "REGEX",
-      "configuration" : {
-        "regex_value" : "nginx:.+?HTTP/\\S+\" (\\d+)"
+      "condition_type": "regex",
+      "condition_value": "^\\S+\\s+nginx:"
+    },
+    {
+      "title": "Response Bytes",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 8,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "response_bytes",
+      "extractor_config": {
+        "regex_value": "nginx:.+?HTTP/\\S+\" \\d+ (\\d+)"
       },
-      "converters" : [ {
-        "type" : "NUMERIC",
-        "configuration" : { }
-      } ],
-      "order" : 6,
-      "cursor_strategy" : "COPY",
-      "target_field" : "response_status",
-      "source_field" : "message",
-      "condition_type" : "REGEX",
-      "condition_value" : "^\\S+\\s+nginx:"
-    }, {
-      "title" : "Response Bytes",
-      "type" : "REGEX",
-      "configuration" : {
-        "regex_value" : "nginx:.+?HTTP/\\S+\" \\d+ (\\d+)"
+      "condition_type": "regex",
+      "condition_value": "^\\S+\\s+nginx:"
+    },
+    {
+      "title": "HTTP Referer",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 10,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "http_referer",
+      "extractor_config": {
+        "regex_value": "nginx:.+?HTTP/\\S+\" \\d+ \\d+ \"(.+?)\""
       },
-      "converters" : [ {
-        "type" : "NUMERIC",
-        "configuration" : { }
-      } ],
-      "order" : 7,
-      "cursor_strategy" : "COPY",
-      "target_field" : "response_bytes",
-      "source_field" : "message",
-      "condition_type" : "REGEX",
-      "condition_value" : "^\\S+\\s+nginx:"
-    }, {
-      "title" : "HTTP Referer",
-      "type" : "REGEX",
-      "configuration" : {
-        "regex_value" : "nginx:.+?HTTP/\\S+\" \\d+ \\d+ \"(.+?)\""
+      "condition_type": "regex",
+      "condition_value": "^\\S+\\s+nginx:"
+    },
+    {
+      "title": "HTTP User Agent",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 9,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "http_user_agent",
+      "extractor_config": {
+        "regex_value": "nginx:.+?HTTP/\\S+\" \\d+ \\d+ \".+?\" \"(.+?)\""
       },
-      "converters" : [ ],
-      "order" : 9,
-      "cursor_strategy" : "COPY",
-      "target_field" : "http_referer",
-      "source_field" : "message",
-      "condition_type" : "REGEX",
-      "condition_value" : "^\\S+\\s+nginx:"
-    }, {
-      "title" : "HTTP User Agent",
-      "type" : "REGEX",
-      "configuration" : {
-        "regex_value" : "nginx:.+?HTTP/\\S+\" \\d+ \\d+ \".+?\" \"(.+?)\""
+      "condition_type": "regex",
+      "condition_value": "^\\S+\\s+nginx:"
+    },
+    {
+      "title": "Connection ID",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 11,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "connection_id",
+      "extractor_config": {
+        "regex_value": "connection=(.+?)\\|"
       },
-      "converters" : [ ],
-      "order" : 8,
-      "cursor_strategy" : "COPY",
-      "target_field" : "http_user_agent",
-      "source_field" : "message",
-      "condition_type" : "REGEX",
-      "condition_value" : "^\\S+\\s+nginx:"
-    }, {
-      "title" : "Connection ID",
-      "type" : "REGEX",
-      "configuration" : {
-        "regex_value" : "connection=(.+?)\\|"
+      "condition_type": "regex",
+      "condition_value": ".+connection=.+"
+    },
+    {
+      "title": "Connection requests",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 12,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "connection_requests",
+      "extractor_config": {
+        "regex_value": "connection_requests=(.+?)\\|"
       },
-      "converters" : [ {
-        "type" : "NUMERIC",
-        "configuration" : { }
-      } ],
-      "order" : 10,
-      "cursor_strategy" : "COPY",
-      "target_field" : "connection_id",
-      "source_field" : "message",
-      "condition_type" : "REGEX",
-      "condition_value" : ".+connection=.+"
-    }, {
-      "title" : "Connection requests",
-      "type" : "REGEX",
-      "configuration" : {
-        "regex_value" : "connection_requests=(.+?)\\|"
+      "condition_type": "regex",
+      "condition_value": ".+connection_requests=.+"
+    },
+    {
+      "title": "Response time",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 13,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "millis",
+      "extractor_config": {
+        "regex_value": "millis=(.+?)>"
       },
-      "converters" : [ {
-        "type" : "NUMERIC",
-        "configuration" : { }
-      } ],
-      "order" : 11,
-      "cursor_strategy" : "COPY",
-      "target_field" : "connection_requests",
-      "source_field" : "message",
-      "condition_type" : "REGEX",
-      "condition_value" : ".+connection_requests=.+"
-    }, {
-      "title" : "Response time",
-      "type" : "REGEX",
-      "configuration" : {
-        "regex_value" : "millis=(.+?)>"
+      "condition_type": "regex",
+      "condition_value": ".+millis=.+"
+    },
+    {
+      "title": "Nginx Server",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 3,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "nginx_server",
+      "extractor_config": {
+        "regex_value": "nginx:.+\\[.+\\] \"([\\w|\\S]+)\""
       },
-      "converters" : [ {
-        "type" : "NUMERIC",
-        "configuration" : { }
-      } ],
-      "order" : 12,
-      "cursor_strategy" : "COPY",
-      "target_field" : "millis",
-      "source_field" : "message",
-      "condition_type" : "REGEX",
-      "condition_value" : ".+millis=.+"
-    }, {
-      "title" : "Message",
-      "type" : "REGEX",
-      "configuration" : {
-        "regex_value" : "nginx:.+?\\\"(\\S+.+HTTP\\/\\S+)\\\" \\d+"
+      "condition_type": "regex",
+      "condition_value": "^\\S+\\s+nginx:"
+    },
+    {
+      "title": "Request Verb",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 4,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "request_verb",
+      "extractor_config": {
+        "regex_value": "nginx:.+\\[.+\\] \"[\\w|\\S]+\" \"(\\S+)"
       },
-      "converters" : [ ],
-      "order" : 13,
-      "cursor_strategy" : "COPY",
-      "target_field" : "message",
-      "source_field" : "message",
-      "condition_type" : "REGEX",
-      "condition_value" : "^\\S+\\s+nginx:"
+      "condition_type": "regex",
+      "condition_value": "^\\S+\\s+nginx:"
+    },
+    {
+      "title": "Request Path",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "numeric",
+          "config": {}
+        }
+      ],
+      "order": 5,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "request_path",
+      "extractor_config": {
+        "regex_value": "nginx:.+?\"[\\w|\\S]+\" \"\\S+ (\\S+).+\""
+      },
+      "condition_type": "regex",
+      "condition_value": "^\\S+\\s+nginx:"
+    },
+    {
+      "title": "Message",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 14,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "message",
+      "extractor_config": {
+        "regex_value": "nginx:.+?\\\"[\\w|\\S]+\\\"\\s\\\"(\\S+.+HTTP\\/\\S+)\\\" \\d+"
+      },
+      "condition_type": "regex",
+      "condition_value": "^\\S+\\s+nginx:"
     } ],
     "static_fields" : {
       "from_nginx" : "true",
