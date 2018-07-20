@@ -1,3 +1,11 @@
+# ⚠️ Deprecation notice ⚠️
+
+This content pack has been deprecated and is not actively maintained.
+
+Please use the community-maintained content pack by [@ronlut](https://github.com/ronlut) at https://github.com/ronlut/graylog-content-pack-nginx-docker instead.
+
+----
+
 # Graylog content pack for nginx
 
 This content pack will create two inputs for the nginx `error_log` and `access_log`. Extractors are applied to effectively read the most important data into message fields. You will be able to do searches for all requests of a given remote IP, all requests that were answered with a HTTP 400 or just all requests that were slow.
