@@ -24,6 +24,12 @@ You need to run at least nginx version 1.7.1, which introduced syslog support.
 
     log_format  graylog2_format  '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for" <msec=$msec|connection=$connection|connection_requests=$connection_requests|millis=$request_time>';
 
+If you run multiple servers (vhosts) on the same host and would like to add this information to your logs, use the following line instead:
+
+    log_format  graylog2_format  '$remote_addr - $remote_user [$time_local] "$host" "$request" $status $body_bytes_sent "$http_referer" "$http_user_agent" "$http_x_forwarded_for" <msec=$msec|connection=$connection|connection_requests=$connection_requests|millis=$request_time>'
+
     # replace the hostnames with the IP or hostname of your Graylog2 server
     access_log syslog:server=graylog2.example.org:12301 graylog2_format;
     error_log syslog:server=graylog2.example.org:12302;
+
+
